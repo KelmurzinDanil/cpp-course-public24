@@ -9,10 +9,12 @@
  * @tparam T 
  */
 template <class T>
-class Iterator : public std::iterator<std::random_access_iterator_tag, T>
+class Iterator
 {
 public:
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = T;
+    using difference_type = ptrdiff_t;
     using reference = T&;
     using pointer = T*;
     using iterator = Iterator<T>;
@@ -25,19 +27,19 @@ public:
         return *ptr_;
     }
 
-    bool operator == (const iterator & other) const noexcept {
+    bool operator == (const Iterator & other) const noexcept {
         return ptr_ == other.ptr_;
     }
 
-    bool operator != (const iterator & other) const noexcept {
+    bool operator != (const Iterator & other) const noexcept {
         return ptr_ != other.ptr_;
     }
 
-    bool operator < (const iterator & other) const noexcept {
+    bool operator < (const Iterator & other) const noexcept {
         return ptr_ < other.ptr_;
     }
 
-    bool operator > (const iterator & other) const noexcept {
+    bool operator > (const Iterator & other) const noexcept {
         return ptr_ > other.ptr_;
     }
 
@@ -45,27 +47,27 @@ public:
         return ptr_ <= other.ptr_;
     }
 
-    bool operator >= (const iterator & other) const noexcept {
+    bool operator >= (const Iterator & other) const noexcept {
         return ptr_ >= other.ptr_;
     }
 
     // Без &: Не изменяет текущий итератор и возвращаем копию
     // C &: Изменяет себя и возвращает себя
-    iterator operator + (int n) const noexcept {
-        return iterator(ptr_ + n); 
+    Iterator operator + (int n) const noexcept {
+        return Iterator(ptr_ + n); 
     }
  
-    iterator & operator += (int n) noexcept {
+    Iterator & operator += (int n) noexcept {
         ptr_ += n;
         return *this;
     }
 
-    iterator operator - (int n) const noexcept {
-        return iterator(ptr_ - n)
+    Iterator operator - (int n) const noexcept {
+        return Iterator(ptr_ - n)
     }
 
-    iterator & operator -= (int n) noexcept {
-        ptr_ += n;
+    Iterator & operator -= (int n) noexcept {
+        ptr_ -= n;
         return *this;
     }
 
@@ -75,38 +77,38 @@ public:
 
     // Без &: Изменяем текущий объект и возвращаем копию
     // C &: Изменяет себя и возвращает себя
-    iterator & operator ++ () noexcept {
+    Iterator & operator ++ () noexcept {
         ++ptr_;
         return *this;
     }
 
-    iterator & operator -- () noexcept {
+    Iterator & operator -- () noexcept {
         --ptr_;
         return *this;
     }
 
-    iterator operator ++ (int) noexcept {
-        iterator tmp = *this;
+    Iterator operator ++ (int) noexcept {
+        Iterator tmp = *this;
         --ptr_;
         return tmp;
         
     }
 
-    iterator operator -- (int) noexcept {
-        iterator tmp = *this;
+    Iterator operator -- (int) noexcept {
+        Iterator tmp = *this;
         ++ptr_;
         return tmp;
     }
 
-    friend iterator& operator + (int n, const iterator & it) noexcept {
-        return iterator(it.ptr_ + n);
+    friend Iterator& operator + (int n, const Iterator & it) noexcept {
+        return Iterator(it.ptr_ + n);
     }
 
-    friend iterator& operator - (int n, const iterator & it) noexcept {
-         return iterator(it.ptr_ - n);
+    friend Iterator& operator - (int n, const Iterator & it) noexcept {
+         return Iterator(it.ptr_ - n);
     }
 
-    friend int operator - (const iterator & lhs, const iterator & rhs) noexcept {
+    friend int operator - (const Iterator & lhs, const Iterator & rhs) noexcept {
         return lhs.ptr_ - rhs.ptr_;
     }
 private:

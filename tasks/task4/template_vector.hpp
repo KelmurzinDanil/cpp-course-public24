@@ -5,7 +5,7 @@ template <class T>
 class Vector
 {
 public: 
-    static const size_t reserve_miltiply_ = 2; // Увеличивает вместимость в 2 раза при нехватке места.
+    static const size_t reserve_multiply_ = 2; // Увеличивает вместимость в 2 раза при нехватке места.
     static const size_t empty_vector_size_ = 8; // Начальная вместимость вектора (8 элементов).
 public:
     using iterator = Iterator<T>;
@@ -37,13 +37,13 @@ public:
 
     //lvalue
     void push_back(const T & value) {
-        if (size_ == capacity_) reserve(capacity_ * reserve_miltiply_);
+        if (size_ == capacity_) reserve(capacity_ * reserve_multiply_);
         data_[size_++] = value;
     }
 
     //rvalue  => перемещаем 
     void push_back(T && value) {
-        if (size_ == capacity_) reserve(capacity_ * reserve_miltiply_);
+        if (size_ == capacity_) reserve(capacity_ * reserve_multiply_);
         data_[size_++] = std::move(value);
     }
 
@@ -86,11 +86,11 @@ public:
     }
 
     iterator begin() const noexcept {
-        return iterator(data_)
+        return iterator(data_);
     }
 
     iterator end() const noexcept {
-        return iterator(data_ + size_)
+        return iterator(data_ + size_);
     }
 
     size_type size() const noexcept {
@@ -102,7 +102,7 @@ public:
     }
 
     bool empty() const noexcept {
-        return size_ == 0;;
+        return size_ == 0;
     }
 
 private:
