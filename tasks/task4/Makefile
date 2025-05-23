@@ -11,3 +11,4 @@ test: build build/tests_run
 
 clean:
 	rm -rf build/
+	m
