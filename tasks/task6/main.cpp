@@ -24,6 +24,7 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <string> 
 
 
 class Integral {
@@ -43,19 +44,41 @@ public:
 
 
     static double integralFunction(double x) {
-        // тут нужно реализовать функцию интеграла S(a, b) = (1+e^x)^0.5 dx
-        return 0;
+         return std::sqrt(1.0 + std::exp(x));
     }
-
+    
 
     double calculateIntegral() {
-        // в зависимости от количество потоков (tn) реализуйте подсчёт интеграла
-        return 0;
+        const double h = static_cast<double>(b - a) / n;
+        const int m = n / tn;
+
+        std::vector<double> partial_sums(tn, 0.0);
+        std::vector<std::thread> threads;
+
+        for (int thread_id = 0; thread_id < tn; ++thread_id) {
+        threads.emplace_back([this, h, m, &partial_sums](int thread_id) {
+            const int start = thread_id * m;
+            const int end = start + m - 1;
+            double sum = 0.0;
+            
+            for (int i = start; i <= end; ++i) {
+                const double x_i = a + i * h;
+                const double x_next = x_i + h;
+                sum += (integralFunction(x_i) + integralFunction(x_next)) * h / 2.0;
+            }
+            
+            partial_sums[thread_id] = sum;
+        }, thread_id);
+        }
+
+        for (auto& t : threads) {
+            t.join();
+        }
+
+        return std::accumulate(partial_sums.begin(), partial_sums.end(), 0.0);
     }
 
 };
-
-
 
 int main(int argc, char** argv)
 {
